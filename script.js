@@ -8,7 +8,7 @@ var todoList = {
 		localStorage.setItem('myTodoListItems', JSON.stringify(this.items));
 		localStorage.setItem('myTodoListCategories', JSON.stringify(this.categories));
 	},
-	
+
 	// Get data from local storage
 	getData: function() {
 		this.items = JSON.parse(localStorage.getItem('myTodoListItems'));
@@ -43,11 +43,17 @@ var todoList = {
 			}
 		}
 
+		//Clear text field
+		$("#todo").val("");
+
 		// Store data in local storage
 		this.storeData();
 	},
 
 	deleteItem: function(item) {
+		debugger;
+		var item = todoList.items[item];
+
 		for (i in this.items) {
 			if (this.items[i].val == item) {
 				this.items.splice(i,1);
@@ -56,6 +62,8 @@ var todoList = {
 
 		// Store data in local storage
 		this.storeData();
+		debugger;
+		this.showList();
 	},
 
 	changeItem: function(oldVal, newVal) {
@@ -92,8 +100,19 @@ var todoList = {
 	},
 
 	showList: function() {
+		$("ul").empty();
+
 		for (i in this.items) {
-			console.log("- " + this.items[i].val);
+			$('#list').append(
+				"<div class='card black'>" +
+					"<div class='card-content white-text'>" +
+						"<span class='card-title'>" + this.items[i].val + "</span>" +
+					"</div>" +
+					"<div class='card-action teal'>" +
+						"<button class='waves-effect waves-light btn' id='todo-button'>Delete</button>" +
+					"</div>" +
+				"</div>"
+			);
 		}
 	},
 
@@ -111,3 +130,13 @@ var todoList = {
 
 // Initialise todoList data with local storage data
 todoList.getData();
+
+$( document ).ready(function() {
+    todoList.showList();
+
+		$("#todo-button").click(function() {
+			var item = $("#todo").val();
+			todoList.addItem(item);
+			todoList.showList();
+		});
+});
